@@ -40,6 +40,7 @@ const ContactState = (props) => {
       },
     ],
     current: null,
+    filtered: null,
   };
   const [state, dispatch] = useReducer(contactReducer, initialState);
 
@@ -59,6 +60,14 @@ const ContactState = (props) => {
     dispatch({ type: UPDATE_CONTACT, payload: contact });
   };
 
+  const filterContacts = (text) => {
+    dispatch({ type: FILTER_CONTACTS, payload: text });
+  };
+
+  const clearFilter = () => {
+    dispatch({ type: CLEAR_FILTER });
+  };
+
   const addContact = (contact) => {
     contact.id = uuidv4();
     dispatch({ type: ADD_CONTACT, payload: contact });
@@ -68,6 +77,9 @@ const ContactState = (props) => {
       value={{
         contacts: state.contacts,
         current: state.current,
+        filtered: state.filtered,
+        clearFilter,
+        filterContacts,
         addContact,
         deleteContact,
         setCurrent,
