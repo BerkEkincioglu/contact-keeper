@@ -2,18 +2,7 @@ import React, { useReducer } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import AlertContext from './alertContext';
 import alertReducer from './alertReducer';
-import {
-  REGISTER_SUCCESS,
-  REGISTER_FAIL,
-  USER_LOADED,
-  AUTH_ERROR,
-  LOGIN_SUCCESS,
-  LOGIN_FAIL,
-  LOGOUT,
-  CLEAR_ERRORS,
-  SET_ALERT,
-  REMOVE_ALERT,
-} from '../types';
+import { SET_ALERT, REMOVE_ALERT } from '../types';
 
 const AlertState = (props) => {
   const initialState = [];

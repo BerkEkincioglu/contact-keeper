@@ -1,22 +1,22 @@
-const express = require("express");
-const { check, validationResult } = require("express-validator");
+const express = require('express');
+const { check, validationResult } = require('express-validator');
 const router = express.Router();
-const config = require("config");
-const jwt = require("jsonwebtoken");
-const auth = require("../middleware/auth");
-const bcrypt = require("bcryptjs");
-const User = require("../models/User");
+const config = require('config');
+const jwt = require('jsonwebtoken');
+const auth = require('../middleware/auth');
+const bcrypt = require('bcryptjs');
+const User = require('../models/User');
 
 // @route     GET api/auth
 // @desc      Get logged in user
 // @access    Private
-router.get("/", auth, async (req, res) => {
+router.get('/', auth, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select("-password");
+    const user = await User.findById(req.user.id).select('-password');
     res.json(user);
   } catch (err) {
     console.error(err);
-    res.status(500).send("Server Error");
+    res.status(500).send('Server Error');
   }
 });
 
@@ -25,10 +25,10 @@ router.get("/", auth, async (req, res) => {
 // @access    Private
 
 router.post(
-  "/",
+  '/',
   [
-    check("email", "Please include a valid email").isEmail(),
-    check("password", "Password is required").exists(),
+    check('email', 'Please include a valid email').isEmail(),
+    check('password', 'Password is required').exists(),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -39,10 +39,10 @@ router.post(
     try {
       let user = await User.findOne({ email });
 
-      if (!user) res.status(400).json({ msg: "Invalid Credentials" });
+      if (!user) res.status(400).json({ msg: 'Invalid Credentials' });
 
       const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) res.status(400).json({ msg: "Invalid Password" });
+      if (!isMatch) res.status(400).json({ msg: 'Invalid Credentials' });
 
       const payload = {
         user: {
@@ -52,7 +52,7 @@ router.post(
 
       jwt.sign(
         payload,
-        config.get("jwtSecret"),
+        config.get('jwtSecret'),
         { expiresIn: 360000 },
         (err, token) => {
           if (err) throw err;
@@ -61,7 +61,7 @@ router.post(
       );
     } catch (e) {
       console.error(e.message);
-      res.status(500).send("Server Error");
+      res.status(500).send('Server Error');
     }
   }
 );
