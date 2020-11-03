@@ -1,19 +1,27 @@
-import React, { Fragment, useContext } from 'react';
+import React, { Fragment, useContext, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import ContactContext from '../../context/contact/contactContext';
 import ContactItem from './ContactItem';
+import Spinner from '../layout/Spinner';
 
 const Contacts = () => {
   const contactContext = useContext(ContactContext);
-  const { contacts, filtered } = contactContext;
+  const { contacts, filtered, getContacts, loading } = contactContext;
 
-  if (contacts.length === 0) return <h4>Please add a Contact</h4>;
+  useEffect(() => {
+    getContacts();
+    //eslint-disable-next-line
+  }, []);
+
+  if (contacts !== 0 && contacts.length === null && !loading)
+    return <h4>Please add a Contact</h4>;
 
   return (
     <div>
       <Fragment>
-        {filtered !== null
-          ? filtered.map((contact) => (
+        {contacts !== null && !loading ? (
+          filtered !== null ? (
+            filtered.map((contact) => (
               <motion.div
                 key={contact._id}
                 layout
@@ -24,9 +32,10 @@ const Contacts = () => {
                 <ContactItem contact={contact} />
               </motion.div>
             ))
-          : contacts.map((contact) => (
+          ) : (
+            contacts.map((contact) => (
               <motion.div
-                key={contact.id}
+                key={contact._id}
                 layout
                 animate={{ opacity: 1 }}
                 initial={{ opacity: 0 }}
@@ -34,7 +43,11 @@ const Contacts = () => {
               >
                 <ContactItem contact={contact} />
               </motion.div>
-            ))}
+            ))
+          )
+        ) : (
+          <Spinner />
+        )}
       </Fragment>
     </div>
   );
